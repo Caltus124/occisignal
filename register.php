@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Inscription</title>
+    <title>OcciSignal | Inscription</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>

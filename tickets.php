@@ -101,6 +101,8 @@
         <input type="submit" value="Filtrer">
     </form>
 </div>
+<br>
+<br>
 
 <?php
     // Connexion à la base de données (à adapter selon votre configuration)

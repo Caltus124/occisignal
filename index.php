@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Page de Connexion</title>
+    <title>OcciSignal | Connexion</title>
 </head>
 <body>
     <form action="./login.php" method="post">

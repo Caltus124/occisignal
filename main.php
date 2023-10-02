@@ -10,7 +10,7 @@ if (!isset($_SESSION['nom_utilisateur'])) {
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Main</title>
+    <title>OcciSignal</title>
     <link rel="stylesheet" href="style.css" />
     <!-- Boxicons CSS -->
     <link flex href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
@@ -23,7 +23,7 @@ if (!isset($_SESSION['nom_utilisateur'])) {
     <nav class="sidebar locked">
       <div class="logo_items flex">
         <span class="nav_image">
-          <img src="images/logo.png" />
+          <img src="images/user.png" />
         </span>
         <span class="logo_name">OcciSignal</span>
         <i class="bx bx-lock-alt" id="lock-icon" title="Unlock Sidebar"></i>
@@ -89,9 +89,9 @@ if (!isset($_SESSION['nom_utilisateur'])) {
               <span class="line"></span>
             </div>
             <li class="item">
-              <a href="#" class="link flex">
+              <a href="main.php?page=parametres" class="link flex">
                 <i class="bx bx-cog"></i>
-                <span>Setting</span>
+                <span>Paramètres</span>
               </a>
             </li>
             <li class="item">

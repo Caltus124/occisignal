@@ -1,5 +1,5 @@
 <?php
-var_dump($_POST);
+$message = "";
 // Vérifiez si le formulaire a été soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Récupérez les données du formulaire
@@ -21,20 +21,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($stmt = $conn->prepare($sql)) {
         // Liez les paramètres à la requête
         $stmt->bind_param("ss", $titre, $description);
-
+    
         // Exécutez la requête
         if ($stmt->execute()) {
-            header("Location: main.php?page=creationcategories");
+            $message = "La catégorie a été ajoutée avec succès.";
+            header("Location: main.php?page=creationcategories&message=" . urlencode($message));
             exit();
         } else {
-            echo "Erreur lors de l'ajout de la catégorie : " . $stmt->error;
+            $message = "Erreur lors de l'ajout de la catégorie : " . $stmt->error;
         }
-
+    
         // Fermez la déclaration
         $stmt->close();
     } else {
-        echo "Erreur de préparation de la requête : " . $conn->error;
+        $message = "Erreur de préparation de la requête : " . $conn->error;
     }
+    
 
     // Fermeture de la connexion à la base de données
     $conn->close();
@@ -150,7 +152,22 @@ select option {
     color: #333; /* Couleur du texte */
     font-size: 16px; /* Taille de la police */
 }
-    
+
+.result-message {
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.success-message {
+    color: green;
+}
+
+.error-message {
+    color: red;
+}
+
 </style>
 <body>
 <div class="container">
@@ -165,5 +182,45 @@ select option {
         <input type="submit" value="Ajouter la Catégorie">
     </form>
 </div>
-</body>
-</html>
+<br>
+<br>
+<div class="container">
+<h1>Supprimer une Catégorie</h1>
+<br>
+    <form method="POST" action="supprimer_categorie.php">
+        <label for="categorie_id">Sélectionnez la catégorie à supprimer :</label>
+        <select name="categorie_id" id="categorie_id">
+            <?php
+            // Connexion à la base de données
+            $conn = new mysqli("localhost", "caltus", "root", "signalement");
+
+            // Vérification de la connexion
+            if ($conn->connect_error) {
+                die("La connexion à la base de données a échoué : " . $conn->connect_error);
+            }
+
+            // Requête SQL pour sélectionner toutes les catégories
+            $sql = "SELECT id, titre FROM categories";
+
+            // Exécution de la requête SQL
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $categorie_id = $row["id"];
+                    $categorie_titre = $row["titre"];
+                    echo "<option value='$categorie_id'>$categorie_titre</option>";
+                }
+            } else {
+                echo "<option value=''>Aucune catégorie disponible</option>";
+            }
+
+            // Fermeture de la connexion à la base de données
+            $conn->close();
+            ?>
+        </select>
+        <br>
+        <br>
+        <input type="submit" value="Supprimer la catégorie">
+    </form>
+</div>
