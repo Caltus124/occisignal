@@ -1,13 +1,13 @@
-// Selecting the sidebar and buttons
+// Sélection des éléments de la barre latérale et des boutons
 const sidebar = document.querySelector(".sidebar");
 const sidebarOpenBtn = document.querySelector("#sidebar-open");
 const sidebarCloseBtn = document.querySelector("#sidebar-close");
 const sidebarLockBtn = document.querySelector("#lock-icon");
 
-// Function to toggle the lock state of the sidebar
+// Fonction pour basculer l'état de verrouillage de la barre latérale
 const toggleLock = () => {
   sidebar.classList.toggle("locked");
-  // If the sidebar is not locked
+  // Si la barre latérale n'est pas verrouillée
   if (!sidebar.classList.contains("locked")) {
     sidebar.classList.add("hoverable");
     sidebarLockBtn.classList.replace("bx-lock-alt", "bx-lock-open-alt");
@@ -17,33 +17,34 @@ const toggleLock = () => {
   }
 };
 
-// Function to hide the sidebar when the mouse leaves
+// Fonction pour masquer la barre latérale lorsque la souris la quitte
 const hideSidebar = () => {
   if (sidebar.classList.contains("hoverable")) {
     sidebar.classList.add("close");
   }
 };
 
-// Function to show the sidebar when the mouse enter
+// Fonction pour afficher la barre latérale lorsque la souris entre
 const showSidebar = () => {
   if (sidebar.classList.contains("hoverable")) {
     sidebar.classList.remove("close");
   }
 };
 
-// Function to show and hide the sidebar
+// Fonction pour afficher et masquer la barre latérale
 const toggleSidebar = () => {
   sidebar.classList.toggle("close");
 };
 
-// If the window width is less than 800px, close the sidebar and remove hoverability and lock
-if (window.innerWidth < 800) {
-  sidebar.classList.add("close");
+// Vérifiez si l'URL actuelle contient "main.php?page=map"
+if (window.location.href.includes("main.php?page=map")) {
+  sidebar.classList.add("locked");
+} else {
   sidebar.classList.remove("locked");
-  sidebar.classList.remove("hoverable");
+  sidebar.classList.add("hoverable");
 }
 
-// Adding event listeners to buttons and sidebar for the corresponding actions
+// Ajout des écouteurs d'événements aux boutons et à la barre latérale pour les actions correspondantes
 sidebarLockBtn.addEventListener("click", toggleLock);
 sidebar.addEventListener("mouseleave", hideSidebar);
 sidebar.addEventListener("mouseenter", showSidebar);

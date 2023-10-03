@@ -1,3 +1,50 @@
+<?php
+// Vérifiez si le formulaire a été soumis
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Récupérez les données du formulaire
+    $nom = $_POST["nom"];
+    $prenom = $_POST["prenom"];
+    $nom_utilisateur = $_POST["nom_utilisateur"];
+    $email = $_POST["email"];
+    $mot_de_passe = $_POST["mot_de_passe"];
+    $type_utilisateur = $_POST["type_utilisateur"]; // Vous devez avoir un champ "type_utilisateur" dans votre base de données
+
+    // Connexion à la base de données (à adapter selon votre configuration)
+    $conn = new mysqli("localhost", "caltus", "root", "signalement");
+
+    // Vérification de la connexion
+    if ($conn->connect_error) {
+        die("La connexion à la base de données a échoué : " . $conn->connect_error);
+    }
+
+    // Préparez la requête d'insertion SQL
+    $sql = "INSERT INTO user (nom, prenom, nom_utilisateur, email, mot_de_passe, type_utilisateur) VALUES (?, ?, ?, ?, ?, ?)";
+
+    // Préparez la déclaration SQL en utilisant une requête préparée
+    if ($stmt = $conn->prepare($sql)) {
+        // Hachez le mot de passe pour plus de sécurité
+        $mot_de_passe_hache = password_hash($mot_de_passe, PASSWORD_DEFAULT);
+
+        // Liez les paramètres à la requête
+        $stmt->bind_param("ssssss", $nom, $prenom, $nom_utilisateur, $email, $mot_de_passe_hache, $type_utilisateur);
+    
+        // Exécutez la requête
+        if ($stmt->execute()) {
+            $message = "L'utilisateur a été ajouté avec succès.";
+        } else {
+            $message = "Erreur lors de l'ajout de l'utilisateur : " . $stmt->error;
+        }
+    
+        // Fermez la déclaration
+        $stmt->close();
+    } else {
+        $message = "Erreur de préparation de la requête : " . $conn->error;
+    }
+
+    // Fermeture de la connexion à la base de données
+    $conn->close();
+}
+?>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -8,11 +55,12 @@
     }
 
     .container {
-        max-width: 1200px;
+        max-width: 60%;
         margin: 20px auto;
         padding: 20px;
         background-color: #fff;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 70px;
     }
 
     h1 {
@@ -92,7 +140,78 @@
         color: #333; /* Couleur du texte */
         font-size: 16px; /* Taille de la police */
     }
+
+    .create-user-form h2 {
+        font-size: 20px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .create-user-form label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .create-user-form input[type="text"],
+    .create-user-form input[type="email"],
+    .create-user-form input[type="password"],
+    .create-user-form select {
+        outline: none;
+        width: 100%;
+        padding: 8px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+
+    .create-user-form input[type="submit"] {
+        background-color: #007BFF;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    .create-user-form input[type="submit"]:hover {
+        background-color: #0056b3;
+    }
 </style>
+
+<div class="container">
+<div class="create-user-form">
+        <h2>Créer un Nouvel Utilisateur</h2>
+        <form method="POST" action="">
+            <label for="nom">Nom :</label>
+            <input type="text" name="nom" id="nom" required><br><br>
+            
+            <label for="prenom">Prénom :</label>
+            <input type="text" name="prenom" id="prenom" required><br><br>
+            
+            <label for="nom_utilisateur">Nom d'utilisateur :</label>
+            <input type="text" name="nom_utilisateur" id="nom_utilisateur" required><br><br>
+            
+            <label for="type_utilisateur">Type d'utilisateur :</label>
+            <select name="type_utilisateur" id="type_utilisateur">
+                <option value="admin">Admin</option>
+                <option value="standard" selected>Standard</option>
+                <option value="modérateur">Modérateur</option>
+            </select><br><br>
+            
+            <label for="email">Email :</label>
+            <input type="email" name="email" id="email" required><br><br>
+            
+            <label for="mot_de_passe">Mot de passe :</label>
+            <input type="password" name="mot_de_passe" id="mot_de_passe" required><br><br>
+            
+            <input type="submit" value="Créer l'Utilisateur">
+        </form>
+    </div>
+</div>
+
 <div class="container">
     <h1>Liste des Utilisateurs</h1>
     <table>

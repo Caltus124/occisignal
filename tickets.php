@@ -15,7 +15,7 @@
     }
 
     .container {
-        max-width: 800px;
+        max-width: 60%;
         margin: 20px auto;
         padding: 20px;
         background-color: #fff;
@@ -52,6 +52,33 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
+    .ticket-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 20px;
+    }
+
+    .ticket-priorite {
+        flex: 1;
+        font-size: 14px;
+        color: #007BFF;
+    }
+
+    .ticket-date {
+        flex: 1;
+        font-size: 14px;
+        color: #555;
+        text-align: center;
+    }
+
+    .ticket-statut {
+        flex: 1;
+        font-size: 14px;
+        color: #28a745;
+        text-align: right;
+    }
+
     .ticket h1 {
         font-size: 24px;
         color: #333;
@@ -74,7 +101,11 @@
         color: #555;
         text-align: center;
     }
-
+    .ticket:hover {
+        transform: scale(1.02);
+        transition: transform 0.3s; 
+        cursor: pointer; 
+    }
 </style>
 
 <div class="container">
@@ -141,11 +172,35 @@
     // Affichage des tickets filtrés ou non filtrés
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            echo '<div class="ticket">';
+            // Déterminez la couleur du texte en fonction de la priorité du ticket
+            $textColor = '';
+            switch ($row["priorite"]) {
+                case 'Basse':
+                    $textColor = '#28a745'; // Vert pour priorité basse
+                    break;
+                case 'Normale':
+                    $textColor = '#333'; // Couleur normale pour priorité normale
+                    break;
+                case 'Haute':
+                    $textColor = '#ffc107'; // Jaune pour priorité haute
+                    break;
+                case 'Urgente':
+                    $textColor = '#dc3545'; // Rouge pour priorité urgente
+                    break;
+                default:
+                    // Gérer d'autres cas si nécessaire
+                    break;
+            }
+    
+            // Affichage du ticket avec la couleur de texte pour la priorité
+            echo '<div class="ticket" data-id="' . $row["id"] . '">';
             echo '<h1>' . $row["titre"] . '</h1>';
-            echo '<p>' . $row["description"] . '</p>';
-            echo '<p>Priorité : ' . $row["priorite"] . '</p>';
-            echo '<p>Statut : ' . $row["statut"] . '</p>';
+            echo '<p>' . $row["description"] . '</>';
+            echo '<div class="ticket-details">';
+            echo '<p class="ticket-priorite" style="color: ' . $textColor . ';">' . $row["priorite"] . '</p>';
+            echo '<p class="ticket-date">' . $row["date_creation"] . '</p>';
+            echo '<p class="ticket-statut">' . $row["statut"] . '</p>';
+            echo '</div>';
             echo '</div>';
         }
     } else {
@@ -156,3 +211,18 @@
     $stmt->close();
     $conn->close();
     ?>
+
+<script>
+    // Ajoutez cet événement de clic à toutes les div de ticket
+    const ticketDivs = document.querySelectorAll('.ticket');
+    ticketDivs.forEach(ticketDiv => {
+        ticketDiv.addEventListener('click', function() {
+            // Récupérez l'ID du ticket à partir de l'attribut data-id
+            const ticketId = this.getAttribute('data-id');
+            
+            // Redirigez l'utilisateur vers la page de détails du ticket en fonction de l'ID
+            window.location.href = 'main.php?page=tickets&id=' + ticketId;
+        });
+    });
+</script>
+

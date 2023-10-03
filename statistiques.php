@@ -8,8 +8,9 @@
         .container {
             max-width: 60%;
             margin: 20px auto;
+            display: flex;
+            justify-content: center;
             padding: 20px;
-            padding-left: 12%;
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-top: 50px;
@@ -18,7 +19,6 @@
         /* Style pour chaque case */
         .ticket-count {
             width: 150px; /* Ajustez la largeur selon vos préférences */
-            display: inline-block;
             text-align: center;
             background-color: #007BFF;
             color: #fff;

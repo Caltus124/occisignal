@@ -1,1 +1,5 @@
 http://88.173.34.16
+
+port web 55550
+port ssh 55555
+port mysql 55556

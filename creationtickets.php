@@ -8,7 +8,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 60%;
             margin: 20px auto;
             padding: 20px;
             background-color: #fff;

@@ -85,7 +85,7 @@ if (!isset($_SESSION['nom_utilisateur'])) {
 
           <ul class="menu_item">
             <div class="menu_title flex">
-              <span class="title">Setting</span>
+              <span class="title">Autres</span>
               <span class="line"></span>
             </div>
             <li class="item">
@@ -116,21 +116,31 @@ if (!isset($_SESSION['nom_utilisateur'])) {
 
 
     <?php
-    // Récupérer le paramètre "page" de l'URL
-    $page = isset($_GET['page']) ? $_GET['page'] : 'accueil';
+      // Récupérer le paramètre "page" de l'URL
+      $page = isset($_GET['page']) ? $_GET['page'] : 'accueil';
 
-    // Chemin vers le répertoire contenant les pages PHP
-    $pagesDirectory = dirname(__FILE__) . '/';
+      // Chemin vers le répertoire contenant les pages PHP
+      $pagesDirectory = dirname(__FILE__) . '/';
 
-    // Vérifier si la page demandée existe
-    if (file_exists($pagesDirectory . $page . '.php')) {
-        // Inclure la page demandée
-        include($pagesDirectory . $page . '.php');
-    } else {
-        // Page non trouvée, afficher une page d'erreur ou rediriger vers une page par défaut
-        echo "Page non trouvée";
-    }
+      // Vérifier si le paramètre "id" est présent dans l'URL
+      $id = isset($_GET['id']) ? $_GET['id'] : null;
+
+      // Si un paramètre "id" est présent dans l'URL, inclure la page details_ticket.php
+      if ($id !== null && file_exists($pagesDirectory . 'details_ticket.php')) {
+          include($pagesDirectory . 'details_ticket.php');
+      } else {
+          // Si "id" n'est pas présent ou si la page details_ticket.php n'existe pas,
+          // vérifier si la page demandée existe
+          if (file_exists($pagesDirectory . $page . '.php')) {
+              // Inclure la page demandée
+              include($pagesDirectory . $page . '.php');
+          } else {
+              // Page non trouvée, afficher une page d'erreur ou rediriger vers une page par défaut
+              echo "Page non trouvée";
+          }
+      }
     ?>
+
 
 
 
@@ -148,7 +158,7 @@ if (!isset($_SESSION['nom_utilisateur'])) {
 #map {
   position: absolute;
   top: 0;
-  left: 263px; /* La largeur de votre barre de navigation */
+  left: 270px; /* La largeur de votre barre de navigation */
   width: calc(100% - 270px); /* Prend la largeur restante */
   height: 100vh; /* Hauteur à 100 % de la vue */
   z-index: 0; /* Mettez la carte en arrière-plan */
