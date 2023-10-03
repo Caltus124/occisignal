@@ -1,12 +1,8 @@
 <?php
-// Assurez-vous que vous avez une connexion à la base de données ici
-
-
-$conn = new mysqli("localhost", "caltus", "root", "signalement");
-
-// Vérification de la connexion
-if ($conn->connect_error) {
-    die("La connexion à la base de données a échoué : " . $conn->connect_error);
+session_start();
+require_once('bdd.php');
+if (!isset($_SESSION['type_utilisateur'])) {
+    header('Location: login.php'); 
 }
 
 

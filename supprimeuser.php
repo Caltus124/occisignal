@@ -1,11 +1,10 @@
 <?php
-// Connexion à la base de données (à adapter selon votre configuration)
-$conn = new mysqli("localhost", "caltus", "root", "signalement");
-
-// Vérification de la connexion
-if ($conn->connect_error) {
-    die("La connexion à la base de données a échoué : " . $conn->connect_error);
+session_start();
+require_once('bdd.php');
+if (!isset($_SESSION['type_utilisateur'])) {
+    header('Location: login.php'); 
 }
+
 
 // Vérification de la présence de l'ID de l'utilisateur à supprimer
 if (isset($_GET['id'])) {

@@ -3,12 +3,13 @@ session_start();
 
 // Configuration de la base de données
 $hostname = "127.0.0.1"; // Adresse du serveur MySQL
+$port = 3306;
 $username = "caltus"; // Nom d'utilisateur MySQL
 $password = "root"; // Mot de passe MySQL
 $database = "signalement"; // Nom de la base de données
 
 // Créer une connexion à la base de données
-$conn = new mysqli($hostname, $username, $password, $database);
+$conn = new mysqli($hostname, $username, $password, $database, $port);
 
 // Vérifier la connexion à la base de données
 if ($conn->connect_error) {

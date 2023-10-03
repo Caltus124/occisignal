@@ -1,4 +1,10 @@
 <?php
+session_start();
+require_once('bdd.php');
+if (!isset($_SESSION['type_utilisateur'])) {
+    header('Location: login.php'); 
+}
+
 // Vérifiez si le formulaire a été soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Récupérez les données du formulaire
@@ -10,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $type_utilisateur = $_POST["type_utilisateur"]; // Vous devez avoir un champ "type_utilisateur" dans votre base de données
 
     // Connexion à la base de données (à adapter selon votre configuration)
-    $conn = new mysqli("localhost", "caltus", "root", "signalement");
+    $conn = new mysqli("localhost", "caltus", "root", "signalement", "3306");
 
     // Vérification de la connexion
     if ($conn->connect_error) {
@@ -20,11 +26,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Préparez la requête d'insertion SQL
     $sql = "INSERT INTO user (nom, prenom, nom_utilisateur, email, mot_de_passe, type_utilisateur) VALUES (?, ?, ?, ?, ?, ?)";
 
-    // Préparez la déclaration SQL en utilisant une requête préparée
     if ($stmt = $conn->prepare($sql)) {
-        // Hachez le mot de passe pour plus de sécurité
-        $mot_de_passe_hache = password_hash($mot_de_passe, PASSWORD_DEFAULT);
-
+        // Hachez le mot de passe en utilisant SHA-256
+        $mot_de_passe_hache = hash('sha256', $mot_de_passe); // Hachage en SHA-256
+    
         // Liez les paramètres à la requête
         $stmt->bind_param("ssssss", $nom, $prenom, $nom_utilisateur, $email, $mot_de_passe_hache, $type_utilisateur);
     
@@ -118,6 +123,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     .supprimer-btn {
         background-color: #dc3545;
         color: #fff;
+        margin: 15px;
+        padding: 5px;
     }
 
     .supprimer-btn:hover {
@@ -179,6 +186,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     .create-user-form input[type="submit"]:hover {
         background-color: #0056b3;
     }
+    .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 5px;
+    }
+
+    .green {
+        background-color: green;
+    }
+
+    .red {
+        background-color: red;
+    }
 </style>
 
 <div class="container">
@@ -216,9 +238,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h1>Liste des Utilisateurs</h1>
     <table>
         <tr>
-        <th>ID</th>
-        <th>Nom</th>
-        <th>Prénom</th>
+        <th>Status</th>
         <th>Nom d'utilisateur</th>
         <th>Type d'utilisateur</th>
         <th>Email</th>
@@ -226,7 +246,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </tr>
         <?php
         // Connexion à la base de données (à adapter selon votre configuration)
-        $conn = new mysqli("localhost", "caltus", "root", "signalement");
+        $conn = new mysqli("localhost", "caltus", "root", "signalement", "3306");
 
         // Vérification de la connexion
         if ($conn->connect_error) {
@@ -241,9 +261,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             echo "<tr>";
-            echo "<td>" . $row["id"] . "</td>";
-            echo "<td>" . $row["nom"] . "</td>";
-            echo "<td>" . $row["prenom"] . "</td>";
+            echo "<td>";
+            if ($row["statut"] === "en ligne") {
+                echo "<span class='status-dot green'></span>"; // Point vert pour "en ligne"
+            } else {
+                echo "<span class='status-dot red'></span>"; // Point rouge pour "hors ligne"
+            }
+            echo "</td>";
             echo "<td>" . $row["nom_utilisateur"] . "</td>";
             echo "<td>";
             echo "<select name='type_utilisateur' onchange='updateUserType(this, " . $row['id'] . ")'>";
@@ -266,12 +290,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </table>
 </div>
 <script>
-    function updateUserType(selectElement, userId) {
-        const newType = selectElement.value;
+    function updateUserStatus(selectElement, userId) {
+        const newStatus = selectElement.value;
 
-        // Envoyer une requête AJAX pour mettre à jour le type d'utilisateur dans la base de données
+        // Envoyer une requête AJAX pour mettre à jour le statut de l'utilisateur dans la base de données
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'update_user_type.php', true);
+        xhr.open('POST', 'update_user_status.php', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {
@@ -279,6 +303,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 console.log(xhr.responseText);
             }
         };
-        xhr.send(`userId=${userId}&newType=${newType}`);
+        xhr.send(`userId=${userId}&newStatus=${newStatus}`);
     }
 </script>

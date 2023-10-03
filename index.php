@@ -12,6 +12,15 @@
         <input type="password" id="password" name="password" required><br>
 
         <input type="submit" value="Connexion">
+        <?php
+        // Vérifier si le paramètre error est défini et égal à 2 (erreur d'identifiant ou de mot de passe incorrect)
+        if (isset($_GET['error']) && $_GET['error'] == 1) {
+            echo '<p style="color: red;">Vous vous n\'êtes pas administrateur</p>';
+        }
+        if (isset($_GET['error']) && $_GET['error'] == 2) {
+            echo '<p style="color: red;">Identifiant ou mot de passe incorrect</p>';
+        }
+        ?>
     </form>
 </body>
 <style>

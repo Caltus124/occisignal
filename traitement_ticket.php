@@ -1,4 +1,10 @@
 <?php
+session_start();
+require_once('bdd.php');
+if (!isset($_SESSION['type_utilisateur'])) {
+    header('Location: login.php'); 
+}
+
 // Démarrer la session si elle n'a pas déjà été démarrée
 session_start();
 
@@ -18,14 +24,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $statut = $_POST["statut"];
     $categorie_id = $_POST["categorie"];
     $utilisateur_id = $_SESSION["utilisateur_id"]; // Récupérer l'ID de l'utilisateur connecté depuis la session
-
-    // Connexion à la base de données (à adapter selon votre configuration)
-    $conn = new mysqli("localhost", "caltus", "root", "signalement");
-
-    // Vérification de la connexion
-    if ($conn->connect_error) {
-        die("La connexion à la base de données a échoué : " . $conn->connect_error);
-    }
 
     // Préparez la requête d'insertion SQL
     $sql = "INSERT INTO tickets (titre, description, priorite, statut, utilisateur_id, categorie_id) VALUES (?, ?, ?, ?, ?, ?)";

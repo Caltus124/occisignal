@@ -1,111 +1,133 @@
 
+<?php
+session_start();
+require_once('bdd.php');
+if (!isset($_SESSION['type_utilisateur'])) {
+    header('Location: login.php'); 
+}
+?>
 <style>
-    /* Styles CSS existants... */
+/* Styles CSS existants... */
 
-    /* Ajoutez une classe pour cacher la section de résultats lorsque "Tous" est sélectionné */
-    .hidden {
-        display: none;
-    }
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f5f5f5;
-        margin: 0;
-        padding: 0;
-        padding-top: 50px;
-    }
+/* Ajoutez une classe pour cacher la section de résultats lorsque "Tous" est sélectionné */
+.hidden {
+    display: none;
+}
 
-    .container {
-        max-width: 60%;
-        margin: 20px auto;
-        padding: 20px;
-        background-color: #fff;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    padding-top: 50px;
+}
 
-    h1 {
-        font-size: 24px;
-        color: #333;
-        margin-bottom: 20px;
-    }
+.container {
+    max-width: 60%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-    label {
-        font-weight: bold;
-        display: block;
-        margin-bottom: 5px;
-    }
+h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
 
-    select, input[type="submit"] {
-        outline: none;
-        width: 100%;
-        padding: 8px;
-        font-size: 16px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        margin-bottom: 10px;
-    }
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
 
-    .ticket {
-        max-width: 60%;
-        margin: 20px auto;
-        padding: 20px;
-        background-color: #fff;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
+select, input[type="submit"] {
+    outline: none;
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
 
-    .ticket-details {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-top: 20px;
-    }
+.ticket {
+    max-width: 60%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s;
+}
 
-    .ticket-priorite {
-        flex: 1;
-        font-size: 14px;
-        color: #007BFF;
-    }
+.ticket:hover {
+    transform: scale(1.02);
+}
 
-    .ticket-date {
-        flex: 1;
-        font-size: 14px;
-        color: #555;
-        text-align: center;
-    }
+/* Style pour les balises de tag en fonction de la priorité */
+.tag-basse {
+    background-color: #28a745; /* Vert pour priorité basse */
+    color: #fff; /* Texte blanc pour une meilleure lisibilité */
+    padding: 5px 10px;
+    border-radius: 5px;
+}
 
-    .ticket-statut {
-        flex: 1;
-        font-size: 14px;
-        color: #28a745;
-        text-align: right;
-    }
+.tag-normale {
+    background-color: #333; /* Couleur normale pour priorité normale */
+    color: #fff; /* Texte blanc pour une meilleure lisibilité */
+    padding: 5px 10px;
+    border-radius: 5px;
+}
 
-    .ticket h1 {
-        font-size: 24px;
-        color: #333;
-        margin-bottom: 20px;
-    }
+.tag-haute {
+    background-color: #ffc107; /* Jaune pour priorité haute */
+    color: #000; /* Texte noir pour une meilleure lisibilité */
+    padding: 5px 10px;
+    border-radius: 5px;
+}
 
-    .ticket p {
-        font-size: 16px;
-        color: #555;
-        margin-bottom: 10px;
-    }
-    /* Style pour le message "Aucun ticket trouvé" */
-    .no-tickets {
-        max-width: 60%;
-        margin: 20px auto;
-        padding: 20px;
-        background-color: #fff;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        font-size: 18px;
-        color: #555;
-        text-align: center;
-    }
-    .ticket:hover {
-        transform: scale(1.02);
-        transition: transform 0.3s; 
-        cursor: pointer; 
-    }
+.tag-urgente {
+    background-color: #dc3545; /* Rouge pour priorité urgente */
+    color: #fff; /* Texte blanc pour une meilleure lisibilité */
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+/* Style pour le message "Aucun ticket trouvé" */
+.no-tickets {
+    max-width: 60%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-size: 18px;
+    color: #555;
+    text-align: center;
+}
+
+/* Alignement des éléments dans ticket-details */
+.ticket-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.ticket h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.ticket p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+
 </style>
 
 <div class="container">
@@ -136,13 +158,6 @@
 <br>
 
 <?php
-    // Connexion à la base de données (à adapter selon votre configuration)
-    $conn = new mysqli("localhost", "caltus", "root", "signalement");
-
-    // Vérification de la connexion
-    if ($conn->connect_error) {
-        die("La connexion à la base de données a échoué : " . $conn->connect_error);
-    }
 
     // Construire la requête SQL pour sélectionner tous les tickets
     $sql = "SELECT * FROM tickets";
@@ -164,6 +179,7 @@
             $sql .= " AND statut = '$statut'";
         }
     }
+    $sql .= " ORDER BY date_creation DESC";
 
     $stmt = $conn->prepare($sql);
     $stmt->execute();
@@ -172,34 +188,34 @@
     // Affichage des tickets filtrés ou non filtrés
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            // Déterminez la couleur du texte en fonction de la priorité du ticket
-            $textColor = '';
+            // Déterminez la classe de tag en fonction de la priorité du ticket
+            $tagClass = '';
             switch ($row["priorite"]) {
                 case 'Basse':
-                    $textColor = '#28a745'; // Vert pour priorité basse
+                    $tagClass = 'tag-basse';
                     break;
                 case 'Normale':
-                    $textColor = '#333'; // Couleur normale pour priorité normale
+                    $tagClass = 'tag-normale';
                     break;
                 case 'Haute':
-                    $textColor = '#ffc107'; // Jaune pour priorité haute
+                    $tagClass = 'tag-haute';
                     break;
                 case 'Urgente':
-                    $textColor = '#dc3545'; // Rouge pour priorité urgente
+                    $tagClass = 'tag-urgente';
                     break;
                 default:
                     // Gérer d'autres cas si nécessaire
                     break;
             }
-    
-            // Affichage du ticket avec la couleur de texte pour la priorité
+        
+            // Affichage du ticket avec la balise de tag colorée en fonction de la priorité
             echo '<div class="ticket" data-id="' . $row["id"] . '">';
             echo '<h1>' . $row["titre"] . '</h1>';
-            echo '<p>' . $row["description"] . '</>';
+            echo '<p>' . $row["description"] . '</p>';
             echo '<div class="ticket-details">';
-            echo '<p class="ticket-priorite" style="color: ' . $textColor . ';">' . $row["priorite"] . '</p>';
+            echo '<span class="tag ' . $tagClass . '">' . $row["priorite"] . '</span>';
             echo '<p class="ticket-date">' . $row["date_creation"] . '</p>';
-            echo '<p class="ticket-statut">' . $row["statut"] . '</p>';
+            echo '<p class="ticket-statut tag-blue">' . $row["statut"] . '</p>';
             echo '</div>';
             echo '</div>';
         }

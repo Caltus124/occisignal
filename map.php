@@ -1,3 +1,9 @@
+<?php
+session_start();
+if (!isset($_SESSION['type_utilisateur'])) {
+    header('Location: login.php'); 
+}
+?>
 <div id="map" style="width: 100%; height: 100vh;"></div>
 
 <script>

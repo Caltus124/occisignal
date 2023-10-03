@@ -1,4 +1,11 @@
 <?php
+session_start();
+require_once('bdd.php');
+
+if (!isset($_SESSION['type_utilisateur'])) {
+    header('Location: login.php'); 
+}
+
 $message = "";
 // Vérifiez si le formulaire a été soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -6,13 +13,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $titre = $_POST["titre"];
     $description = $_POST["description"];
 
-    // Connexion à la base de données (à adapter selon votre configuration)
-    $conn = new mysqli("localhost", "caltus", "root", "signalement");
-
-    // Vérification de la connexion
-    if ($conn->connect_error) {
-        die("La connexion à la base de données a échoué : " . $conn->connect_error);
-    }
 
     // Préparez la requête d'insertion SQL
     $sql = "INSERT INTO categories (titre, description) VALUES (?, ?)";

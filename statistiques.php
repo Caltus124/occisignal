@@ -1,3 +1,10 @@
+<?php
+session_start();
+require_once('bdd.php');
+if (!isset($_SESSION['type_utilisateur'])) {
+    header('Location: login.php'); 
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -81,14 +88,6 @@
 </head>
 <body>
     <?php
-    // Connexion à la base de données (à adapter selon votre configuration)
-    $conn = new mysqli("localhost", "caltus", "root", "signalement");
-
-    // Vérification de la connexion
-    if ($conn->connect_error) {
-        die("La connexion à la base de données a échoué : " . $conn->connect_error);
-    }
-
     // Requête SQL pour compter les tickets par priorité
     $sql = "SELECT priorite, COUNT(*) AS count FROM tickets GROUP BY priorite";
     $result = $conn->query($sql);

@@ -1,3 +1,10 @@
+<?php
+session_start();
+require_once('bdd.php');
+if (!isset($_SESSION['type_utilisateur'])) {
+    header('Location: login.php'); 
+}
+?>
 <style>
         body {
             font-family: Arial, sans-serif;
@@ -83,14 +90,7 @@
         <label for="categorie" style="margin-top: 20px;">Catégorie :</label>
         <select name="categorie" id="categorie">
             <?php
-            // Connexion à la base de données (à adapter selon votre configuration)
-            $conn = new mysqli("localhost", "caltus", "root", "signalement");
-
-            // Vérification de la connexion
-            if ($conn->connect_error) {
-                die("La connexion à la base de données a échoué : " . $conn->connect_error);
-            }
-
+            
             // Requête SQL pour récupérer les catégories
             $sql = "SELECT id, titre FROM categories"; // Supposons que la table des catégories a des colonnes 'id' et 'titre'
             $result = $conn->query($sql);

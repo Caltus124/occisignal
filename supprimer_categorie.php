@@ -1,18 +1,13 @@
 <?php
-// Vérifiez si le formulaire a été soumis
+session_start();
+require_once('bdd.php');
+if (!isset($_SESSION['type_utilisateur'])) {
+    header('Location: login.php'); 
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Récupérez l'identifiant de la catégorie à supprimer depuis le formulaire
     $categorie_id = $_POST["categorie_id"];
-
-    // Vérifiez si l'identifiant de la catégorie est valide (par exemple, s'assurer qu'il existe en base de données et qu'il peut être supprimé)
-
-    // Connexion à la base de données (à adapter selon votre configuration)
-    $conn = new mysqli("localhost", "caltus", "root", "signalement");
-
-    // Vérification de la connexion
-    if ($conn->connect_error) {
-        die("La connexion à la base de données a échoué : " . $conn->connect_error);
-    }
 
     // Requête SQL pour supprimer la catégorie
     $sql = "DELETE FROM categories WHERE id = ?";

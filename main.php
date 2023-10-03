@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['nom_utilisateur'])) {
+if (!isset($_SESSION['type_utilisateur'])) {
     header('Location: login.php'); // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
 }
 ?>
@@ -23,7 +23,7 @@ if (!isset($_SESSION['nom_utilisateur'])) {
     <nav class="sidebar locked">
       <div class="logo_items flex">
         <span class="nav_image">
-          <img src="images/user.png" />
+          <img src="images/logo.png" />
         </span>
         <span class="logo_name">OcciSignal</span>
         <i class="bx bx-lock-alt" id="lock-icon" title="Unlock Sidebar"></i>
@@ -73,14 +73,21 @@ if (!isset($_SESSION['nom_utilisateur'])) {
                 <i class='bx bx-stats' ></i>
                 <span>Statistiques</span>
               </a>
-            </li>
-            <li class="item">
-              <a href="main.php?page=user" class="link flex">
-                <i class="bx bx-folder"></i>
-                <span>Utilisateurs</span>
-              </a>
-            </li>
-       
+              <?php
+                // Votre code de vérification d'utilisateur et de session ici
+                // Assurez-vous que la session est démarrée et que vous avez le type d'utilisateur dans $_SESSION
+
+                // Par exemple, supposons que vous stockez le type d'utilisateur dans $_SESSION['type_utilisateur']
+                if (isset($_SESSION['type_utilisateur']) && $_SESSION['type_utilisateur'] === 'admin') {
+                    // L'utilisateur est un administrateur, affichez le lien "Utilisateurs"
+                    echo '<li class="item">';
+                    echo '<a href="main.php?page=user" class="link flex">';
+                    echo '<i class="bx bx-folder"></i>';
+                    echo '<span>Utilisateurs</span>';
+                    echo '</a>';
+                    echo '</li>';
+                }
+                ?>
           </ul>
 
           <ul class="menu_item">
