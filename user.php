@@ -245,6 +245,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <th>Actions</th>
         </tr>
         <?php
+        $userConnecteId = $_SESSION['utilisateur_id'];
         // Connexion à la base de données (à adapter selon votre configuration)
         $conn = new mysqli("localhost", "caltus", "root", "signalement", "3306");
 
@@ -290,12 +291,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </table>
 </div>
 <script>
-    function updateUserStatus(selectElement, userId) {
-        const newStatus = selectElement.value;
+    function updateUserType(selectElement, userId) {
+        const newType = selectElement.value;
 
-        // Envoyer une requête AJAX pour mettre à jour le statut de l'utilisateur dans la base de données
+        // Envoyer une requête AJAX pour mettre à jour le type d'utilisateur dans la base de données
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'update_user_status.php', true);
+        xhr.open('POST', 'update_user_type.php', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {
@@ -303,6 +304,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 console.log(xhr.responseText);
             }
         };
-        xhr.send(`userId=${userId}&newStatus=${newStatus}`);
+        xhr.send(`userId=${userId}&newType=${newType}`);
     }
+
 </script>

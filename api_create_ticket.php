@@ -6,35 +6,41 @@ require_once('bdd.php'); // Assurez-vous que vous avez inclus votre fichier de c
 // Vérifiez si la demande est une demande POST
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Récupérez les données de la demande
-    $titre = $_POST["titre"];
-    $description = $_POST["description"];
-    $id_categorie = $_POST["id_categorie"];
-    $latitude = $_POST["latitude"];
-    $longitude = $_POST["longitude"];
-    $priorite = $_POST["priorite"];
-    $statut = $_POST["statut"];
-    $utilisateur_id = $_POST["utilisateur_id"];
+    $data = json_decode(file_get_contents("php://input"));
 
-    // Obtenir la date et l'heure actuelles au format MySQL
+    $titre = $data->titre;
+    $description = $data->description;
     $date_creation = date('Y-m-d H:i:s');
+    $date_modification = date('Y-m-d H:i:s');
+    $utilisateur_id = $data->utilisateur_id;
+    $categorie_id = $data->categorie_id;
+    $longitude = $data->longitude;
+    $latitude =  $data->latitude;
+    $date_creation = date('Y-m-d H:i:s');
+    $date_modification = date('Y-m-d H:i:s');
+ 
 
-    // Requête SQL pour insérer le ticket sans image
-    $sql = "INSERT INTO tickets (titre, description, id_categorie, latitude, longitude, priorite, statut, date_creation, utilisateur_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    // Requête SQL pour insérer un nouvel utilisateur dans la base de données
+    $sql = "INSERT INTO tickets (titre, description, date_creation, date_modification, utilisateur_id, categorie_id, longitude, latitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("ssiddissi", $titre, $description, $id_categorie, $latitude, $longitude, $priorite, $statut, $date_creation, $utilisateur_id);
+        $stmt->bind_param("ssssiidd", $titre, $description, $date_creation, $date_modification, $utilisateur_id, $categorie_id, $longitude, $latitude);
         if ($stmt->execute()) {
-            http_response_code(201);
-            echo json_encode(array("message" => "Ticket créé avec succès."));
+            http_response_code(201); // Code 201 pour "Created"
+            echo json_encode(array("message" => "Ticket enregistré avec succès."));
         } else {
-            http_response_code(500);
-            echo json_encode(array("message" => "Erreur lors de la création du ticket."));
+            http_response_code(500); // Code 500 pour "Internal Server Error"
+            echo json_encode(array("message" => "Erreur lors de l'enregistrement du ticket : " . $stmt->error));
         }
+        $stmt->close();
     } else {
-        http_response_code(500);
-        echo json_encode(array("message" => "Erreur lors de la préparation de la requête de création du ticket."));
+        http_response_code(500); // Code 500 pour "Internal Server Error"
+        echo json_encode(array("message" => "Erreur de préparation de la requête."));
     }
-} else { 
-    http_response_code(405);
+    $conn->close();
+
+} else {
+    http_response_code(405); // Code 405 pour "Method Not Allowed"
     echo json_encode(array("message" => "Méthode non autorisée."));
 }
 ?>

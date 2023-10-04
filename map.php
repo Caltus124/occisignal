@@ -18,31 +18,29 @@ if (!isset($_SESSION['type_utilisateur'])) {
             zoom: 12.8 // Niveau de zoom initial
         });
 
-        // Marqueur sur la carte
-        var coordinates = [
-            { lat: 43.6047, lng: 1.47 },
-            { lat: 43.605, lng: 1.445 },
-            { lat: 43.606, lng: 1.460 },
-            { lat: 43.607, lng: 1.490 },
-            { lat: 43.610, lng: 1.415 },
-            { lat: 43.600, lng: 1.400 },
-            { lat: 43.610, lng: 1.410 },
-            { lat: 43.611, lng: 1.451 },
-            { lat: 43.612, lng: 1.452 },
-            { lat: 43.650, lng: 1.460 }
-        ];
+        // Récupérer les coordonnées des marqueurs à partir de la base de données (PHP)
+        <?php
+        require_once('bdd.php'); // Assurez-vous d'inclure votre fichier de connexion à la base de données
 
-        // Créer 10 marqueurs aléatoires
-        for (var i = 0; i < 10; i++) {
-            var randomIndex = Math.floor(Math.random() * coordinates.length);
-            var randomCoordinate = coordinates.splice(randomIndex, 1)[0];
+        $sql = "SELECT latitude, longitude FROM tickets WHERE latitude IS NOT NULL AND longitude IS NOT NULL";
+        $result = $conn->query($sql);
 
-            var marker = new google.maps.Marker({
-                position: randomCoordinate,
-                map: map,
-                title: 'Marqueur ' + (i + 1)
-            });
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $lat = $row["latitude"];
+                $lng = $row["longitude"];
+        ?>
+        // Créer un marqueur pour chaque coordonnée
+        var marker = new google.maps.Marker({
+            position: { lat: <?php echo $lat; ?>, lng: <?php echo $lng; ?> },
+            map: map,
+            title: 'Marqueur'
+        });
+        <?php
+            }
         }
+        $conn->close();
+        ?>
 
     }
 

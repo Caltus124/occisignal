@@ -6,6 +6,7 @@ if (!isset($_SESSION['type_utilisateur'])) {
     header('Location: login.php'); 
 }
 ?>
+
 <style>
 /* Styles CSS existants... */
 
@@ -241,4 +242,4 @@ select, input[type="submit"] {
         });
     });
 </script>
-
+<script src="ticket.js"></script>

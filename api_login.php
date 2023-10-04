@@ -27,20 +27,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $stmt->bind_result($user_id, $username);
                 $stmt->fetch();
 
-                $randomBytes = random_bytes(32);
-
-                // Générez un jeton d'authentification (JWT) pour l'utilisateur
-                $key = "4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2"; // Remplacez par votre clé secrète
-                $token_payload = array(
-                    "user_id" => $user_id,
-                    "username" => $username,
-                    "exp" => time() + 3600 // Le jeton expire dans 1 heure (3600 secondes)
+                // Préparez la réponse JSON avec l'ID de l'utilisateur
+                $response = array(
+                    "message" => "Authentification réussie",
+                    "user_id" => $user_id
                 );
 
-                $jwt_token = JWT::encode($token_payload, $key, 'HS256');
-
                 http_response_code(200);
-                echo json_encode(array("message" => "Authentification réussie", "token" => $jwt_token));
+                echo json_encode($response);
             } else {
                 http_response_code(401);
                 echo json_encode(array("message" => "Nom d'utilisateur ou mot de passe incorrect."));

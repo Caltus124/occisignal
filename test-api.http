@@ -1,0 +1,11 @@
+POST http://localhost/Signalement/api_create_ticket.php
+
+Content-Type: application/x-www-form-urlencoded
+
+titre=Titre du ticket
+description=Description du ticket
+id_categorie=1
+latitude=12.345
+longitude=67.890
+priorite=Basse
+statut=Nouveau
