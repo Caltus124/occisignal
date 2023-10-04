@@ -71,6 +71,17 @@ if (isset($_GET['id'])) {
     ?>
     </p>
 
+    <div class="image-container">
+        <?php
+        if (!empty($row["image_data"])) {
+            echo '<img src="data:image/jpeg;base64,' . $row["image_data"] . '" alt="Image du ticket" class="ticket-image">';
+        }
+        ?>
+    </div>
+    <p><strong>Longitude :</strong> <?php echo $row["longitude"]; ?></p>
+    <p><strong>Latitude :</strong> <?php echo $row["latitude"]; ?></p>
+
+
 
     <!-- Lien pour modifier le ticket -->
     <a class="edit-link" href="#" onclick="showEditForm()">Modifier ce ticket</a>
@@ -177,6 +188,18 @@ if (isset($_GET['id'])) {
 </div>
 
 <style>
+    .image-container {
+        /* Ajoutez vos styles CSS ici */
+        border: 2px solid #ccc; /* Exemple : ajoute une bordure grise de 2 pixels */
+        padding: 10px; /* Exemple : ajoute une marge intérieure de 10 pixels */
+        text-align: center; /* Exemple : centre l'image horizontalement */
+    }
+
+    .ticket-image {
+        /* Ajoutez des styles supplémentaires à l'image elle-même ici si nécessaire */
+        max-width: 100%; /* Exemple : assure que l'image ne dépasse pas la largeur de son conteneur */
+        height: auto; /* Garde les proportions de l'image */
+    }
     .delete-link {
         background-color: #dc3545; /* Rouge */
         color: #fff;
@@ -233,6 +256,17 @@ if (isset($_GET['id'])) {
         padding: 20px;
         background-color: #fff;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }    .image-container {
+        /* Ajoutez vos styles CSS ici */
+        border: 2px solid #ccc; /* Exemple : ajoute une bordure grise de 2 pixels */
+        padding: 10px; /* Exemple : ajoute une marge intérieure de 10 pixels */
+        text-align: center; /* Exemple : centre l'image horizontalement */
+    }
+
+    .ticket-image {
+        /* Ajoutez des styles supplémentaires à l'image elle-même ici si nécessaire */
+        max-width: 100%; /* Exemple : assure que l'image ne dépasse pas la largeur de son conteneur */
+        height: auto; /* Garde les proportions de l'image */
     }
     .back-button {
         display: inline-block;

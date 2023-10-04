@@ -18,13 +18,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $latitude =  $data->latitude;
     $date_creation = date('Y-m-d H:i:s');
     $date_modification = date('Y-m-d H:i:s');
+    $image_data = $data->image_data;
  
 
 
     // Requête SQL pour insérer un nouvel utilisateur dans la base de données
-    $sql = "INSERT INTO tickets (titre, description, date_creation, date_modification, utilisateur_id, categorie_id, longitude, latitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO tickets (titre, description, date_creation, date_modification, utilisateur_id, categorie_id, longitude, latitude, image_data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("ssssiidd", $titre, $description, $date_creation, $date_modification, $utilisateur_id, $categorie_id, $longitude, $latitude);
+        $stmt->bind_param("ssssiidds", $titre, $description, $date_creation, $date_modification, $utilisateur_id, $categorie_id, $longitude, $latitude, $image_data);
         if ($stmt->execute()) {
             http_response_code(201); // Code 201 pour "Created"
             echo json_encode(array("message" => "Ticket enregistré avec succès."));
